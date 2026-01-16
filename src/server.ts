@@ -73,10 +73,20 @@ async function appendEmailToSheet(email: string): Promise<void> {
   }
 }
 
+// HTML escape function to prevent XSS
+function escapeHTML(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 // Generate HTML for the page
 function generateHTML(message?: string, error?: boolean): string {
   const messageHTML = message
-    ? `<div class="message ${error ? 'error' : 'success'}">${message}</div>`
+    ? `<div class="message ${error ? 'error' : 'success'}">${escapeHTML(message)}</div>`
     : '';
 
   return `
@@ -85,7 +95,7 @@ function generateHTML(message?: string, error?: boolean): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${config.title}</title>
+  <title>${escapeHTML(config.title)}</title>
   <style>
     * {
       margin: 0;
@@ -188,10 +198,10 @@ function generateHTML(message?: string, error?: boolean): string {
 </head>
 <body>
   <div class="container">
-    ${config.imageUrl ? `<img src="${config.imageUrl}" alt="Header" class="header-image">` : ''}
+    ${config.imageUrl ? `<img src="${escapeHTML(config.imageUrl)}" alt="Header" class="header-image">` : ''}
     <div class="content">
-      <h1>${config.title}</h1>
-      <p>${config.description}</p>
+      <h1>${escapeHTML(config.title)}</h1>
+      <p>${escapeHTML(config.description)}</p>
       ${messageHTML}
       <form method="POST" action="/subscribe">
         <div class="form-group">
