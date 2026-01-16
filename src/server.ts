@@ -3,6 +3,19 @@ import { google } from 'googleapis';
 import * as fs from 'fs';
 import * as path from 'path';
 
+interface GoogleServiceAccountCredentials {
+  type: string;
+  project_id: string;
+  private_key_id: string;
+  private_key: string;
+  client_email: string;
+  client_id: string;
+  auth_uri: string;
+  token_uri: string;
+  auth_provider_x509_cert_url: string;
+  client_x509_cert_url: string;
+}
+
 interface Config {
   title: string;
   description: string;
@@ -10,7 +23,7 @@ interface Config {
   googleSheets: {
     spreadsheetId: string;
     sheetName: string;
-    credentials: any;
+    credentials: GoogleServiceAccountCredentials;
   };
   port: number;
 }
@@ -213,8 +226,9 @@ app.post('/subscribe', async (req: Request, res: Response) => {
     return res.send(generateHTML('Please provide a valid email address.', true));
   }
 
-  // Basic email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Email validation - using a more comprehensive regex pattern
+  // This pattern handles most common email formats while avoiding overly complex patterns
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(email)) {
     return res.send(generateHTML('Please provide a valid email address.', true));
   }
