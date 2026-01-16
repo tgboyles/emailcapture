@@ -136,7 +136,7 @@ function generateHTML(message?: string, error?: boolean): string {
       font-size: 28px;
     }
     p {
-      color: #666;
+      color: #555;
       margin-bottom: 24px;
       line-height: 1.6;
       font-size: 16px;
