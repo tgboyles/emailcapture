@@ -54,6 +54,9 @@ const auth = new google.auth.GoogleAuth({
 
 const sheets = google.sheets({ version: 'v4', auth });
 
+// Email validation regex (RFC 5322 simplified)
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
 // Function to append email to Google Sheet
 async function appendEmailToSheet(email: string): Promise<void> {
   const timestamp = new Date().toISOString();
@@ -236,10 +239,8 @@ app.post('/subscribe', async (req: Request, res: Response) => {
     return res.send(generateHTML('Please provide a valid email address.', true));
   }
 
-  // Email validation - using a more comprehensive regex pattern
-  // This pattern handles most common email formats while avoiding overly complex patterns
-  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  if (!emailRegex.test(email)) {
+  // Email validation
+  if (!EMAIL_REGEX.test(email)) {
     return res.send(generateHTML('Please provide a valid email address.', true));
   }
 
