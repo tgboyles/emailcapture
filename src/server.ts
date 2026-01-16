@@ -235,7 +235,7 @@ app.post('/subscribe', async (req: Request, res: Response) => {
 
   try {
     await appendEmailToSheet(email.trim());
-    res.send(generateHTML('Thank you for subscribing! You\'ve been added to our mailing list.', false));
+    res.send(generateHTML("Thank you for subscribing! You've been added to our mailing list.", false));
   } catch (error) {
     console.error('Subscription error:', error);
     res.send(generateHTML('An error occurred. Please try again later.', true));
